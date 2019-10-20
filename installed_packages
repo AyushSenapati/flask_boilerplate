@@ -1,0 +1,5 @@
+flask
+flask-migrate
+psycopg2-binary
+flask_restful
+gunicorn

@@ -1,0 +1,23 @@
+# base image
+FROM python:3.7.3-alpine3.10
+
+# Update alpine and install required libraries
+RUN apk update
+RUN \
+    apk add --no-cache postgresql-libs && \
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
+    # apk --purge del .build-deps
+
+# set working directory
+WORKDIR /usr/src/app
+
+# add and install requirements
+COPY ./requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt
+
+# add app
+COPY . ./
+
+# run server
+EXPOSE 5000
+CMD [ "gunicorn", "-c", "gunicorn_config.py", "manage:app", "--reload" ]

@@ -51,3 +51,23 @@ Below command will show all the routes registered to the Flask application.
 ```
 $ python manage.py routes
 ```
+
+A template of dockerfile is provided with this boilerplate. To build image using this template, first rename it to dockerfile and do any modifications needed, then run following command being in the project root directory.
+
+```
+$ docker build -t flask-api .
+```
+
+Once the image is built and tagged, you can run the image by mounting local volume to container's WORK_DIR. gunicorn is configured to reload on file change. 
+
+So this basically provides dockerised dev env, where you can code and at the same time it reflects the changes on docker. To run the tagged image:
+
+```
+$ docker run --rm -p 5000:5000 -v $(pwd):/usr/src/app flask-api
+```
+
+A template of docker-compose.yml file is also provided to make the development process hassle free. It starts up all the project dependencies at once. It also restarts the api server on failuer, so that while development in case due to syntax error container fails to restart, docker-compose keeps on retrying to start the container. Behaviour can be changed by modifying the docker-compose.yml file. To run the docker-compose:
+
+```
+$ docker-compose up
+```

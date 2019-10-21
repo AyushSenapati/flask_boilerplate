@@ -2,8 +2,9 @@ import os
 from jinja2 import Template
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 APP_ROOT = 'app'
-SERVICE_DIR = 'services'
+SERVICE_DIR = os.path.join(BASE_DIR, 'services')
 
 while True:
     service_name = 'service_' + input('Service Name: ')
@@ -34,10 +35,12 @@ from flask_restful import Api
 
 # Import controllers to create routes
 
+
 # Class to handle service specific global exception
 class ExtendedAPI(Api):
     def handle_error(self, err):
         pass
+
 
 {{service_name}}_bp = Blueprint('{{service_name}}', __name__)
 {{service_name}}_api = ExtendedAPI({{service_name}}_bp)

@@ -27,3 +27,42 @@ SQLALCHEMY_BINDS = {
 
 # Turn it off if you are not using flask-sqlalchemy signaling
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# import app
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'filters': {
+#         'request_id': {
+#             '()': 'app.services.logger_util.RequestIdFilter'
+#         }
+#     },
+#     'formatters': {
+#         'customJSON': {
+#             '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+#             'format': '%(asctime)s %(name)s %(levelname)s %(message)s'
+#         }
+#     },
+#     'handlers': {
+#         'consoleHandler': {
+#             'class': 'logging.StreamHandler',
+#             'level': 'DEBUG',
+#             'filters': ['request_id'],
+#             'formatter': 'customJSON'
+#         }
+#     },
+#     'loggers': {
+#         'root': {
+#             'handlers': ['consoleHandler'],
+#             'filters': ['request_id'],
+#             'propagate': True
+#         }
+#     }
+# }
+
+# Provide absolute path to the config file
+logger_config_file = BASEDIR + '/settings/logger.ini'
+
+# Configure the logger for the application
+from logging import config
+config.fileConfig(logger_config_file)

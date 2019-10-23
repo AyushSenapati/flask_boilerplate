@@ -1,6 +1,6 @@
 from app import db
 
-from app.services.shared.models.base import BaseModel
+from app.shared.models.base import BaseModel
 
 
 class Base(BaseModel):

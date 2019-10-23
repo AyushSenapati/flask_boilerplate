@@ -10,7 +10,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 # from flask_cors import CORS
 from flask_migrate import Migrate
-
+from flask import g
 
 # Instatiate the extensions
 db = SQLAlchemy()
@@ -42,5 +42,11 @@ def create_app(app_settings=None):
     @app.shell_context_processor
     def ctx():
         return {'app': app, 'db': db}
+
+    # Intersect the reponse and add request-id to the reponse header
+    @app.after_request
+    def add_request_id(response):
+        response.headers.add('X-REQUEST-ID', g.get('request_id'))
+        return response
 
     return app

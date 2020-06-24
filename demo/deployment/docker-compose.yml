@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+
+  demo-api:
+    build:
+      context: ../services/api
+      dockerfile: ./infra/dockerfile
+    image: project/demo-api:latest
+    container_name: project-demo-api
+    # restart: always
+    ports:
+      - 5000:5000
+    env_file: .env
+    environment:
+      - REDIS_HOST=demo-redis
+      - REDIS_PORT=6379
+    volumes:
+      - ../services/api/src:/home/project/DEMO/src
+    depends_on:
+      - demo-postgres
+      - demo-redis
+
+  demo-postgres:
+    image: project/postgres:11-alpine
+    build:
+      context: ../services/postgres/infra
+      dockerfile: dockerfile
+    container_name: project-demo-postgres
+    env_file: .env
+    volumes:
+      - ../services/postgres/data/container_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  demo-redis:
+    image: redis:5.0.6-alpine
+    container_name: project-demo-redis
+    volumes:
+      - ../services/redis/data/container_data:/data
+    ports:
+      - 6379:6379

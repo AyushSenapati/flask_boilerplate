@@ -1,0 +1,7 @@
+# base image
+FROM postgres:11-alpine
+
+# Add `create_multiple_dbs.sh`,
+# as Scripts inside `docker-entrypoint-initdb.d` will be
+# run by entry point automatically
+ADD ./create_multiple_dbs.sh /docker-entrypoint-initdb.d

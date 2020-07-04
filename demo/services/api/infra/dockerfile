@@ -1,0 +1,43 @@
+# Stage-1: base image
+# -------------------
+FROM python:3.7.7-slim-buster as py3_on_debian
+
+# Install system dependencies
+RUN apt-get -y update && \
+    apt-get -y install libpq-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    useradd --create-home --shell /bin/bash project
+
+ENV PYTHONUSERBASE=/home/project/.local
+
+# Stage-2: Install python dependencies
+# ----------------------------------------------
+FROM py3_on_debian as py3debian_with_dep
+
+# Create dirs which will be used as airflow home
+ENV PATH=$PATH:/home/project/.local/bin
+RUN cd /home/project \
+    && mkdir DEMO \
+    && cd DEMO \
+    && mkdir data infra src
+
+# Copy and install Python requirements
+COPY --chown=project ./src/requirements.txt /tmp
+RUN pip install --user --no-cache-dir -r /tmp/requirements.txt
+
+# Stage-3: copy entire project
+# ----------------------------
+FROM py3debian_with_dep as project_demo_api
+RUN ls -ltr ../ && \
+    chown -R project:project /home/project/.local /home/project/DEMO
+
+USER project
+WORKDIR /home/project/DEMO/src
+
+COPY --chown=project ./src ./
+COPY --chown=project ./infra ../infra
+
+# Run server
+EXPOSE ${DEMO_PORT_TARGET}
+ENTRYPOINT [ "sh", "../infra/entrypoint.sh" ]

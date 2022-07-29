@@ -33,7 +33,7 @@ MarkupSafe==1.1.1
 marshmallow==3.0.3
 marshmallow-sqlalchemy==0.19.0
 mccabe==0.6.1
-mistune==0.8.4
+mistune==2.0.3
 parso==0.5.1
 passlib==1.7.1
 pexpect==4.7.0
